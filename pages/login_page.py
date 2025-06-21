@@ -51,5 +51,8 @@ def test_login():
 
     except Exception as e:
         print("Test failed:", str(e))
+    finally:
+        time.sleep(3)
+        driver.quit()
 
 test_login()
