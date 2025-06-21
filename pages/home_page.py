@@ -27,10 +27,10 @@ def test_home():
             EC.element_to_be_clickable((By.XPATH, "//a[text()='Department Details' and @href='AddDepartment.jsp']"))
         )
         department_link.click()
-        print("✅ Department Details link clicked successfully.")
+        print(" Department Details link clicked successfully.")
 
     except Exception as e:
-        print(f"❌ Error occurred: {e}")
+        print(f" Error occurred: {e}")
 
     finally:
         time.sleep(3)
