@@ -13,46 +13,48 @@ def test_login():
     driver.maximize_window()
 
     try:
-        # Step 2: Open login page of LRDE_VMS_UI
+        # Step 1: Open login page of LRDE_VMS_UI
         driver.get("http://192.168.0.182:8084/LRDE_VMS_UI/Signin.jsp")
 
-    # Step 3: Enter username
+        # Step 2: Enter username
         username_field = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "loginname"))
         )
         username_field.click()
         username_field.send_keys("exult")  
 
-        # Step 4: Enter password
+        # Step 3: Enter password
         password_field = driver.find_element(By.NAME, "loginpwd")
         password_field.click()
         password_field.send_keys("exult")  
 
-        # Step 5: Submit form (either using ENTER or clicking login button)
+        # Step 4: Click login button
         login_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//input[@value='Login']"))
         )
         login_button.click()
 
-        # Wait 5 seconds after clicking login
-        time.sleep(5)
-
-        # Step 6: Wait for redirect to home page
+        # Step 5: Wait for redirect to home page
         WebDriverWait(driver, 20).until(
-            EC.url_contains("http://192.168.0.182:8084/LRDE_VMS_UI/Home.jsp")  
+            EC.url_contains("/LRDE_VMS_UI/Home.jsp")  
         )
 
-        # Step 7: Verify successful login (by URL, title, or specific element)
+        # Step 6: Check successful login
         current_url = driver.current_url
-        if "http://192.168.0.182:8084/LRDE_VMS_UI/Home.jsp" in current_url:
+        if "Home.jsp" in current_url:
             print("Login successful. Home page loaded:", current_url)
+            return driver  #  RETURN the driver so other scripts can use it
         else:
-            print("Login failed or wrong redirect. URL:", current_url)
+            print("❌ Login failed or wrong redirect. URL:", current_url)
+            driver.quit()
+            return None
 
     except Exception as e:
         print("Test failed:", str(e))
-    finally:
-        time.sleep(3)
         driver.quit()
+        return None  #  Return None on failure
 
-test_login()
+
+# Only call for standalone testing
+# if __name__ == "__main__":
+#     test_login()

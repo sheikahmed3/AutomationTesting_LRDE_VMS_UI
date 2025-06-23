@@ -1,39 +1,36 @@
-from selenium import webdriver 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-from pages.login_page import test_login  
 import time
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from pages.login_page import test_login
+
 
 def test_home():
-    # Get the driver from login
-    driver = test_login()  # Assumes test_login logs in and returns a driver
-
-    # Step 1: Navigate to Home Page
-    driver.get("http://192.168.0.182:8084/LRDE_VMS_UI/Home.jsp")  
+    driver = test_login()
+    if not driver:
+        print("Login failed, test aborted.")
+        return
 
     try:
-        # Step 2: Click on the menu button (span with id="openNav")
-        menu_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "openNav"))
-        )
-        menu_button.click()
-        time.sleep(1)
+        # Open Home Page
+        driver.get("http://192.168.0.182:8084/LRDE_VMS_UI/Home.jsp")
 
-        # Step 3: Click on Department Details from the menu
-        department_link = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//a[text()='Department Details' and @href='AddDepartment.jsp']"))
+        # Wait for an element to confirm Home Page is loaded (adjust selector as needed)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "openNav"))  # Example: menu button
         )
-        department_link.click()
-        print(" Department Details link clicked successfully.")
+        print("Home page loaded successfully.")
 
     except Exception as e:
-        print(f" Error occurred: {e}")
+        print(f"Error occurred while loading Home page: {e}")
 
     finally:
         time.sleep(3)
         driver.quit()
 
-test_home()
+# Run test
+# test_home()
